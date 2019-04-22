@@ -5,6 +5,10 @@ VisualStudioVersion = 15.0.28307.421
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PSLNLExportUtility", "PSLNLExportUtility.csproj", "{990BD82B-E17A-4497-BEE4-8B96A0EB6E92}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PSLNLExportUtility.Logic", "PSLNLExportUtility.Logic\PSLNLExportUtility.Logic.csproj", "{0189775A-A2AF-4862-87D1-A081A9F7B91D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PSLNLExportUtility.Infrastructure", "PSLNLExportUtility.Infrastructure\PSLNLExportUtility.Infrastructure.csproj", "{671E1971-F412-415A-9D18-A20E7736AD19}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{990BD82B-E17A-4497-BEE4-8B96A0EB6E92}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{990BD82B-E17A-4497-BEE4-8B96A0EB6E92}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{990BD82B-E17A-4497-BEE4-8B96A0EB6E92}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0189775A-A2AF-4862-87D1-A081A9F7B91D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0189775A-A2AF-4862-87D1-A081A9F7B91D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0189775A-A2AF-4862-87D1-A081A9F7B91D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0189775A-A2AF-4862-87D1-A081A9F7B91D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{671E1971-F412-415A-9D18-A20E7736AD19}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{671E1971-F412-415A-9D18-A20E7736AD19}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{671E1971-F412-415A-9D18-A20E7736AD19}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{671E1971-F412-415A-9D18-A20E7736AD19}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
