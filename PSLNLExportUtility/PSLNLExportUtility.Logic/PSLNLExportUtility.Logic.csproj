@@ -31,8 +31,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Dapper, Version=1.60.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dapper.1.60.6\lib\net451\Dapper.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.IO.Compression" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -43,14 +47,20 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\DataImport\DataPipelineService.cs" />
+    <Compile Include="Services\ExcelDataReader\ConnectionHelper.cs" />
     <Compile Include="Services\ExcelDataReader\ExcelDataReaderService.cs" />
     <Compile Include="Services\DataImport\Models\DataPipelineServiceSettings.cs" />
+    <Compile Include="Services\ExcelDataReader\Models\Employee.cs" />
+    <Compile Include="Services\ExcelDataReader\Query.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PSLNLExportUtility.Infrastructure\PSLNLExportUtility.Infrastructure.csproj">
       <Project>{671e1971-f412-415a-9d18-a20e7736ad19}</Project>
       <Name>PSLNLExportUtility.Infrastructure</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

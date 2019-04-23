@@ -10,5 +10,7 @@
 
             public static string Error => SettingsLoader.GetValue<string>("ErrorDirectoryPath");
         }
+
+        public static bool PipelineEnabled => SettingsLoader.GetValue<bool>("PipelineEnabled");
     }
 }

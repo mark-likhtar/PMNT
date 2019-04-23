@@ -3,6 +3,9 @@ using PSLNLExportUtility.Logic.Services.DataImport;
 using PSLNLExportUtility.Logic.Services.DataImport.Models;
 using PSLNLExportUtility.Infrastructure.Logging;
 using System;
+using PSLNLExportUtility.Logic.Services.ExcelDataReader;
+using PSLNLExportUtility.Logic.Services.ExcelDataReader.Models;
+using System.Collections.Generic;
 
 namespace PSLNLExportUtility
 {
@@ -12,22 +15,23 @@ namespace PSLNLExportUtility
 
         public static void Main(string[] args)
         {
+            _logger.Info("Started working.");
+
             DataPipelineService dataPipelineService = null;
 
             try
             {
-                dataPipelineService = new DataPipelineService(_logger, new DataPipelineServiceSettings
-                {
-                    QueueDirectoryPath = Settings.DirectoriesPaths.Queue,
-                    ProcessedDirectoryPath = Settings.DirectoriesPaths.Processed,
-                    ErrorDirectoryPath = Settings.DirectoriesPaths.Error,
-                });
+                dataPipelineService = CreateDataPipelineService();
+                var excelDataReaderService = CreateExcelDataReaderService();
 
-                dataPipelineService.ReadData();
+                dataPipelineService.PrepareForProcessing();
                 if (dataPipelineService.CurrentFileLocation == null)
                 {
                     return;
                 }
+
+                IEnumerable<Employee> employees =
+                    excelDataReaderService.ReadData(dataPipelineService.CurrentFileLocation);
 
                 dataPipelineService.SaveDataToProcessed();
             }
@@ -40,6 +44,21 @@ namespace PSLNLExportUtility
             {
                 _logger.Info("Finished working.");
             }
+        }
+
+        private static DataPipelineService CreateDataPipelineService()
+        {
+            return new DataPipelineService(_logger, new DataPipelineServiceSettings
+            {
+                QueueDirectoryPath = Settings.DirectoriesPaths.Queue,
+                ProcessedDirectoryPath = Settings.DirectoriesPaths.Processed,
+                ErrorDirectoryPath = Settings.DirectoriesPaths.Error,
+            }, pipelineEnabled: Settings.PipelineEnabled);
+        }
+
+        private static ExcelDataReaderService CreateExcelDataReaderService()
+        {
+            return new ExcelDataReaderService();
         }
     }
 }

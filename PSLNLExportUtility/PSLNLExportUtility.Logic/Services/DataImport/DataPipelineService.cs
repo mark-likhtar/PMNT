@@ -14,16 +14,19 @@ namespace PSLNLExportUtility.Logic.Services.DataImport
 
         private readonly DataPipelineServiceSettings _settings;
         private readonly Logger _logger;
+        private readonly bool _isPipelineEnabled;
 
         public string CurrentFileLocation { get; private set; }
 
-        public DataPipelineService(Logger logger, DataPipelineServiceSettings settings)
+        public DataPipelineService(Logger logger, DataPipelineServiceSettings settings, bool pipelineEnabled = true)
         {
             _settings = settings ?? throw new ArgumentNullException(nameof(settings));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+
+            _isPipelineEnabled = pipelineEnabled;
         }
 
-        public void ReadData()
+        public void PrepareForProcessing()
         {
             CurrentFileLocation = GetLatestCreatedFilePathFromQueue();
             if (CurrentFileLocation == null)
@@ -33,11 +36,21 @@ namespace PSLNLExportUtility.Logic.Services.DataImport
             }
 
             _logger.Info($"Found the file by the specified path: '{CurrentFileLocation}'.");
+            if (!_isPipelineEnabled)
+            {
+                return;
+            }
+
             MoveCurrentFileToDirectory(Path.GetTempPath());
         }
 
         public void SaveDataToError(string logs)
         {
+            if (!_isPipelineEnabled)
+            {
+                return;
+            }
+
             ValidateSourceFilePrescence();
 
             string directoryPath = CreateErrorDirectory();
@@ -47,6 +60,11 @@ namespace PSLNLExportUtility.Logic.Services.DataImport
 
         public void SaveDataToProcessed()
         {
+            if (!_isPipelineEnabled)
+            {
+                return;
+            }
+
             ValidateSourceFilePrescence();
 
             MoveCurrentFileToDirectory(_settings.ProcessedDirectoryPath);
