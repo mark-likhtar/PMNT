@@ -34,6 +34,9 @@
     <Reference Include="Dapper, Version=1.60.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Dapper.1.60.6\lib\net451\Dapper.dll</HintPath>
     </Reference>
+    <Reference Include="ORMi, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ORMi.2.0.0\lib\ORMi.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.IO.Compression" />
@@ -52,6 +55,8 @@
     <Compile Include="Services\DataImport\Models\DataPipelineServiceSettings.cs" />
     <Compile Include="Services\ExcelDataReader\Models\Employee.cs" />
     <Compile Include="Services\ExcelDataReader\Query.cs" />
+    <Compile Include="Services\LebelWMI\LenelService.cs" />
+    <Compile Include="Services\LebelWMI\Model\Cardholder.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PSLNLExportUtility.Infrastructure\PSLNLExportUtility.Infrastructure.csproj">
@@ -62,5 +67,6 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

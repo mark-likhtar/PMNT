@@ -6,6 +6,8 @@ using System;
 using PSLNLExportUtility.Logic.Services.ExcelDataReader;
 using PSLNLExportUtility.Logic.Services.ExcelDataReader.Models;
 using System.Collections.Generic;
+using PSLNLExportUtility.Logic.Services.LebelWMI;
+using System.Linq;
 
 namespace PSLNLExportUtility
 {
@@ -33,6 +35,13 @@ namespace PSLNLExportUtility
                 IEnumerable<Employee> employees =
                     excelDataReaderService.ReadData(dataPipelineService.CurrentFileLocation);
 
+                var cardholderService = CreateCardholderService();
+
+                foreach (var employee in employees)
+                {
+                    cardholderService.UpsertEmployee(employee);
+                }
+
                 dataPipelineService.SaveDataToProcessed();
             }
             catch (Exception e)
@@ -59,6 +68,10 @@ namespace PSLNLExportUtility
         private static ExcelDataReaderService CreateExcelDataReaderService()
         {
             return new ExcelDataReaderService();
+        }
+        private static LenelService CreateCardholderService()
+        {
+            return new LenelService();
         }
     }
 }
