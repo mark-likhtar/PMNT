@@ -9,7 +9,7 @@ namespace PSLNLExportUtility.Logic.Services.DataImport
 {
     public class DataPipelineService
     {
-        private const string EXCEL_FILE_SEARCH_PATTERN = "*.xls*";
+        private const string CSV_FILE_SEARCH_PATTERN = "*.csv*";
         private const string DEFAULT_LOG_FILE_NAME = "application.log";
 
         private readonly DataPipelineServiceSettings _settings;
@@ -31,7 +31,7 @@ namespace PSLNLExportUtility.Logic.Services.DataImport
             CurrentFileLocation = GetLatestCreatedFilePathFromQueue();
             if (CurrentFileLocation == null)
             {
-                _logger.Info("There are no excel files to work with.");
+                _logger.Info("There are no csv files to work with.");
                 return;
             }
 
@@ -80,7 +80,7 @@ namespace PSLNLExportUtility.Logic.Services.DataImport
         private string GetLatestCreatedFilePathFromQueue()
         {
             return Directory
-                .EnumerateFiles(_settings.QueueDirectoryPath, EXCEL_FILE_SEARCH_PATTERN)
+                .EnumerateFiles(_settings.QueueDirectoryPath, CSV_FILE_SEARCH_PATTERN)
                 .OrderByDescending(filePath => File.GetCreationTime(filePath))
                 .FirstOrDefault();
         }

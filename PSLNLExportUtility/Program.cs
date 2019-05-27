@@ -3,11 +3,9 @@ using PSLNLExportUtility.Logic.Services.DataImport;
 using PSLNLExportUtility.Logic.Services.DataImport.Models;
 using PSLNLExportUtility.Infrastructure.Logging;
 using System;
-using PSLNLExportUtility.Logic.Services.ExcelDataReader;
-using PSLNLExportUtility.Logic.Services.ExcelDataReader.Models;
+using PSLNLExportUtility.Logic.Services.CsvDataReader;
 using System.Collections.Generic;
-using PSLNLExportUtility.Logic.Services.LebelWMI;
-using System.Linq;
+using PSLNLExportUtility.Logic.Models;
 
 namespace PSLNLExportUtility
 {
@@ -24,7 +22,7 @@ namespace PSLNLExportUtility
             try
             {
                 dataPipelineService = CreateDataPipelineService();
-                var excelDataReaderService = CreateExcelDataReaderService();
+                var csvDataReaderService = CreateCsvDataReaderService();
 
                 dataPipelineService.PrepareForProcessing();
                 if (dataPipelineService.CurrentFileLocation == null)
@@ -33,14 +31,10 @@ namespace PSLNLExportUtility
                 }
 
                 IEnumerable<Employee> employees =
-                    excelDataReaderService.ReadData(dataPipelineService.CurrentFileLocation);
+                    csvDataReaderService.ReadData(dataPipelineService.CurrentFileLocation);
 
-                var cardholderService = CreateCardholderService();
 
-                foreach (var employee in employees)
-                {
-                    cardholderService.UpsertEmployee(employee);
-                }
+
 
                 dataPipelineService.SaveDataToProcessed();
             }
@@ -65,13 +59,9 @@ namespace PSLNLExportUtility
             }, pipelineEnabled: Settings.PipelineEnabled);
         }
 
-        private static ExcelDataReaderService CreateExcelDataReaderService()
+        private static CsvDataReaderService CreateCsvDataReaderService()
         {
-            return new ExcelDataReaderService();
-        }
-        private static LenelService CreateCardholderService()
-        {
-            return new LenelService();
+            return new CsvDataReaderService();
         }
     }
 }

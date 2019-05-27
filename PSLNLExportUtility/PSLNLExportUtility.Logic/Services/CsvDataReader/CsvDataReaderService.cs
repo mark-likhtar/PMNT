@@ -1,24 +1,24 @@
 ﻿using Dapper;
-using PSLNLExportUtility.Logic.Services.ExcelDataReader.Models;
+using PSLNLExportUtility.Logic.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.OleDb;
+using System.IO;
 
-namespace PSLNLExportUtility.Logic.Services.ExcelDataReader
+namespace PSLNLExportUtility.Logic.Services.CsvDataReader
 {
-    public class ExcelDataReaderService
+    public class CsvDataReaderService
     {
         public IEnumerable<Employee> ReadData(string filePath)
         {
             using (OleDbConnection connection = CreateConnection(filePath))
             {
+                string fileName = new FileInfo(filePath).Name;
                 string sheetName = GetFirstSheetName(connection);
-                string query = Query.From(sheetName).ReadData;
+                string query = Query.From(fileName, sheetName).ReadData;
 
-                IEnumerable<Employee> result = connection.Query<Employee>(query);
-
-                return result;
+                return connection.Query<Employee>(query);
             }
         }
 
@@ -27,7 +27,7 @@ namespace PSLNLExportUtility.Logic.Services.ExcelDataReader
             DataTable schema = connection.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, null);
             if (schema == null || schema.Rows.Count <= 0)
             {
-                throw new ArgumentNullException("Excel file does not contain data sheets.");
+                throw new ArgumentNullException("Csv file does not contain data sheets.");
             }
 
             return schema.Rows[0]["TABLE_NAME"].ToString();
