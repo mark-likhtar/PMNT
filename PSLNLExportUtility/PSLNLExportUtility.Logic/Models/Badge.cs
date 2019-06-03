@@ -9,13 +9,18 @@ namespace PSLNLExportUtility.Logic.Models
 {
     public class Badge
     {
-        [WMIProperty("Activate", typeof(string))]
+        public long Id { get; set; }
+
+        [WMIProperty("ACTIVATE", typeof(string))]
         public string EffectiveDate { get; set; }
 
-        [WMIProperty("Status", typeof(int))]
+        [WMIProperty("STATUS", typeof(int))]
         public int Status { get; set; }
 
-        [WMIProperty("Deactivate", typeof(string))]
+        [WMIProperty("DEACTIVATE", typeof(string))]
         public string TerminationDate { get; set; }
+
+        [WMIProperty("EXTENDED_ID", typeof(string))]
+        public string ExtendedId { get; set; }
     }
 }

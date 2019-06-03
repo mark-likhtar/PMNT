@@ -10,13 +10,13 @@ namespace PSLNLExportUtility.Logic.Services.CsvDataReader
 {
     public class CsvDataReaderService
     {
-        public IEnumerable<Employee> ReadData(string filePath)
+        public IEnumerable<Employee> ReadData(string filePath, bool withKronosNumber)
         {
             using (OleDbConnection connection = CreateConnection(filePath))
             {
                 string fileName = new FileInfo(filePath).Name;
                 string sheetName = GetFirstSheetName(connection);
-                string query = Query.From(fileName, sheetName).ReadData;
+                string query = Query.From(fileName, sheetName, withKronosNumber).ReadData;
 
                 return connection.Query<Employee>(query);
             }

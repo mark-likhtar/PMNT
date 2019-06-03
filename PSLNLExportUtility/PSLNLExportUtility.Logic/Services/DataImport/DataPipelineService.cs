@@ -1,5 +1,6 @@
 ﻿using PSLNLExportUtility.Infrastructure.Logging;
 using PSLNLExportUtility.Logic.Services.DataImport.Models;
+using PSLNLExportUtility.Logic.Services.Helpers;
 using System;
 using System.IO;
 using System.Linq;
@@ -79,10 +80,13 @@ namespace PSLNLExportUtility.Logic.Services.DataImport
 
         private string GetLatestCreatedFilePathFromQueue()
         {
-            return Directory
+            var files = Directory
                 .EnumerateFiles(_settings.QueueDirectoryPath, CSV_FILE_SEARCH_PATTERN)
-                .OrderByDescending(filePath => File.GetCreationTime(filePath))
-                .FirstOrDefault();
+                .ToList();
+
+            files.Sort(new FileNameComparer());
+
+            return files.FirstOrDefault();
         }
 
         private string CreateErrorDirectory()

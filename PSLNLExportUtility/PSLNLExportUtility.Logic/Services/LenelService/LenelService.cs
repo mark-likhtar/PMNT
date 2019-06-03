@@ -1,4 +1,5 @@
-﻿using PSLNLExportUtility.Logic.Attributes;
+﻿using PSLNLExportUtility.Infrastructure.Logging;
+using PSLNLExportUtility.Logic.Attributes;
 using PSLNLExportUtility.Logic.Models;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,8 @@ namespace PSLNLExportUtility.Logic.Services.LenelService
     public class LenelService<T>
     {
         private readonly ManagementClass _connection;
+
+        public static readonly Logger _logger = new Logger();
 
         public LenelService(string className)
         {
@@ -27,13 +30,19 @@ namespace PSLNLExportUtility.Logic.Services.LenelService
             return new ManagementClass(scope, path, options);
         }
 
-        public void UpdateInstance(ManagementBaseObject instance, T instanceUpdate)
+        public bool UpdateInstance(ManagementBaseObject instance, T instanceUpdate)
         {
-            var newInstance = _connection.CreateInstance();
+            var newInstance = instance as ManagementObject;
+            var props = new List<string>();
 
             foreach (var prop in _connection.Properties)
             {
                 var attributeProperty = WMIPropertyAttribute.GetAttributeField(instanceUpdate, prop.Name);
+                if (attributeProperty == null)
+                {
+                    continue;
+                }
+
                 var value = attributeProperty.Property.GetValue(instanceUpdate);
 
                 if (!CheckPropertyIsDefault(attributeProperty, instanceUpdate))
@@ -41,11 +50,10 @@ namespace PSLNLExportUtility.Logic.Services.LenelService
                     newInstance[prop.Name] = value;
                 }
 
-                Console.WriteLine($"{prop.Name}: {newInstance[prop.Name]}");
+                props.Add($"{prop.Name}: {newInstance[prop.Name]}");
             }
 
-            Console.WriteLine("Ready for put");
-            Console.ReadKey();
+            _logger.Info($"[UPDATE] {string.Join(", ", props)}");
             try
             {
                 PutOptions options = new PutOptions();
@@ -54,17 +62,25 @@ namespace PSLNLExportUtility.Logic.Services.LenelService
             }
             catch (Exception e)
             {
-                Console.WriteLine($"{e.Message}\n{e.StackTrace}");
+                _logger.Error(e);
+                return false;
             }
+            return true;
         }
 
-        public void AddInstance(T instance)
+        public bool AddInstance(T instance)
         {
             var newInstance = _connection.CreateInstance();
+            var props = new List<string>();
 
             foreach (var prop in _connection.Properties)
             {
                 var attributeProperty = WMIPropertyAttribute.GetAttributeField<T>(instance, prop.Name);
+                if (attributeProperty == null)
+                {
+                    continue;
+                }
+
                 var value = attributeProperty.Property.GetValue(instance);
 
                 if (!CheckPropertyIsDefault(attributeProperty, instance))
@@ -72,11 +88,11 @@ namespace PSLNLExportUtility.Logic.Services.LenelService
                     newInstance[prop.Name] = value;
                 }
 
-                Console.WriteLine($"{prop.Name}: {newInstance[prop.Name]}");
+                props.Add($"{prop.Name}: {newInstance[prop.Name]}");
             }
 
-            Console.WriteLine("Ready for put");
-            Console.ReadKey();
+            _logger.Info($"[INSERT] {string.Join(", ", props)}");
+
             try
             {
                 PutOptions options = new PutOptions();
@@ -85,8 +101,10 @@ namespace PSLNLExportUtility.Logic.Services.LenelService
             }
             catch (Exception e)
             {
-                Console.WriteLine($"{e.Message}\n{e.StackTrace}");
+                _logger.Error(e);
+                return false;
             }
+            return true;
         }
 
         public ManagementObjectCollection GetInstances()
@@ -99,7 +117,7 @@ namespace PSLNLExportUtility.Logic.Services.LenelService
             var value = attributeProperty.Property.GetValue(instance);
 
             return (attributeProperty.Attribute.Type == typeof(int) && (int)value == default) ||
-                    (attributeProperty.Attribute.Type == typeof(string) && (string)value == default) ||
+                    (attributeProperty.Attribute.Type == typeof(string) && string.IsNullOrEmpty((string)value)) ||
                     (attributeProperty.Attribute.Type == typeof(bool) && (bool)value == default) ||
                     (attributeProperty.Attribute.Type == typeof(DateTime) && (DateTime)value == default);
         }

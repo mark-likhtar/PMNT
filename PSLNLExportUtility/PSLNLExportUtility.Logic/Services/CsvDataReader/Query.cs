@@ -6,16 +6,22 @@
 
         private readonly string _fileName;
 
-        private Query(string fileName, string targetSheetName)
+        private readonly bool _withKronosNumber;
+
+        private Query(string fileName, string targetSheetName, bool withKronosNumber)
         {
             _targetSheetName = targetSheetName;
             _fileName = fileName;
+            _withKronosNumber = withKronosNumber;
         }
 
-        public static Query From(string fileName, string targetSheetName)
+        public static Query From(string fileName, string targetSheetName, bool withKronosNumber)
         {
-            return new Query(fileName, targetSheetName);
+            return new Query(fileName, targetSheetName, withKronosNumber);
         }
+
+        private string ReadDataByFlag =>
+            _withKronosNumber ? @"LTRIM(RTRIM([F16])) AS BadgeNumber, LTRIM(RTRIM([F17])) AS PerOrg" : @"LTRIM(RTRIM([F16])) AS PerOrg";
 
         public string ReadData =>
             $@"
@@ -35,8 +41,7 @@
                   LTRIM(RTRIM([F13])) AS ManagerName,
                   LTRIM(RTRIM([F14])) AS ManagerEmail,
                   LTRIM(RTRIM([F15])) AS TerminationDate,
-                  LTRIM(RTRIM([F16])) AS BadgeNumber,
-                  LTRIM(RTRIM([F17])) AS PerOrg
+                  {ReadDataByFlag}
                 FROM [{_targetSheetName}]
             ";
     }

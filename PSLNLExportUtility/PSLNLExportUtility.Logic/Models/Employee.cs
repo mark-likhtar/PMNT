@@ -5,9 +5,9 @@ namespace PSLNLExportUtility.Logic.Models
 {
     public class Employee
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         public DateTime EffectiveDate { get; set; }
-        public char Status { get; set; }
+        public string Status { get; set; }
         public string FirstName { get; set; }
         public string MiddleName { get; set; }
         public string LastName { get; set; }
@@ -23,8 +23,8 @@ namespace PSLNLExportUtility.Logic.Models
         public string ManagerName { get; set; }
         public string ManagerEmail { get; set; }
         public string SupperLocation { get; set; }
-        public string TerminationDate { get; set; }
-        public string BadgeNumber { get; set; }
+        public DateTime TerminationDate { get; set; }
+        public long BadgeNumber { get; set; }
         public string PerOrg { get; set; }
     }
 }

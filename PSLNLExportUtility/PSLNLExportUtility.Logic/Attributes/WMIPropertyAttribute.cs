@@ -30,7 +30,7 @@ namespace PSLNLExportUtility.Logic.Attributes
                     .Where(attr => attr is WMIPropertyAttribute)
                     .FirstOrDefault() as WMIPropertyAttribute;
 
-                if (attribute.Name == name)
+                if (attribute != null && attribute.Name == name)
                 {
                     return new AttributeProperty<WMIPropertyAttribute>
                     {

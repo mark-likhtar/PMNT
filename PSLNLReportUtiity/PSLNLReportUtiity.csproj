@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{990BD82B-E17A-4497-BEE4-8B96A0EB6E92}</ProjectGuid>
+    <ProjectGuid>{1960D20A-4720-4A1E-99AC-3797A026D8F0}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>PSLNLExportUtility</RootNamespace>
-    <AssemblyName>PSLNLExportUtility</AssemblyName>
-    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <RootNamespace>PSLNLReportUtiity</RootNamespace>
+    <AssemblyName>PSLNLReportUtiity</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
@@ -33,17 +33,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ORMi, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\ORMi.2.0.0\lib\ORMi.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
-    <Reference Include="System.configuration" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
-    <Reference Include="System.IO.Compression" />
     <Reference Include="System.Management" />
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.ServiceModel" />
-    <Reference Include="System.Transactions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -52,25 +45,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Insfrastructure\Settings\Settings.cs" />
-    <Compile Include="Insfrastructure\Settings\SettingsLoader.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config">
-      <TransformOnBuild>true</TransformOnBuild>
-    </None>
-    <None Include="packages.config" />
+    <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="PSLNLExportUtility.Logic\PSLNLExportUtility.Logic.csproj">
+    <ProjectReference Include="..\PSLNLExportUtility\PSLNLExportUtility.Logic\PSLNLExportUtility.Logic.csproj">
       <Project>{0189775A-A2AF-4862-87D1-A081A9F7B91D}</Project>
       <Name>PSLNLExportUtility.Logic</Name>
-    </ProjectReference>
-    <ProjectReference Include="PSLNLExportUtility.Infrastructure\PSLNLExportUtility.Infrastructure.csproj">
-      <Project>{671E1971-F412-415A-9D18-A20E7736AD19}</Project>
-      <Name>PSLNLExportUtility.Infrastructure</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
