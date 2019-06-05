@@ -50,8 +50,16 @@ namespace PSLNLReportUtiity
 
             if (!string.IsNullOrEmpty(obj["USERFIELD85"] as string))
             {
-                //Add date check
-                items.Add($"\"{obj["SSNO"]}\",\"GB\",\"DATE\", \"{obj["USERFIELD85"]}\"");
+                var activate = obj["FLDDATE1059"] as string;
+                if (!string.IsNullOrEmpty(activate))
+                {
+                    activate = activate.Substring(0, 8);
+                    if (activate == today)
+                    {
+                        items.Add($"\"{obj["SSNO"]}\",\"GB\",\"DATE\", \"{obj["USERFIELD85"]}\"");
+                    }
+
+                }
             }
 
             var badges = CardholderService.GetCardholderBadgesBySSNO(obj["SSNO"] as string);
