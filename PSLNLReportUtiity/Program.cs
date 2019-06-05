@@ -56,7 +56,7 @@ namespace PSLNLReportUtiity
                     activate = activate.Substring(0, 8);
                     if (activate == today)
                     {
-                        items.Add($"\"{obj["SSNO"]}\",\"GB\",\"DATE\", \"{obj["USERFIELD85"]}\"");
+                        items.Add($"\"{obj["SSNO"]}\",\"GB\",\"{activate}\",\"{obj["USERFIELD85"]}\"");
                     }
 
                 }
@@ -77,7 +77,7 @@ namespace PSLNLReportUtiity
                     activate = activate.Substring(0, 8);
                     if (activate == today)
                     {
-                        items.Add($"\"{obj["SSNO"]}\",\"BA\",\"{activate}\", \"{obj["BADGEKEY"]}\"");
+                        items.Add($"\"{obj["SSNO"]}\",\"BA\",\"{activate}\",\"{obj["BADGEKEY"]}\"");
                     }
                 }
             }
