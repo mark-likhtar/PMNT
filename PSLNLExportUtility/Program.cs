@@ -75,11 +75,11 @@ namespace PSLNLExportUtility
                     return false;
                 }
 
-                IEnumerable<Employee> employees =
+                List<Employee> employees =
                     csvDataReaderService.ReadData(
                         dataPipelineService.CurrentFileLocation,
                         Settings.WithKronosNumber
-                    );
+                    ).ToList();
 
                 var cardholderService = CreateLenelService<Cardholder>("Lnl_Cardholder");
                 var badgeService = CreateLenelService<Badge>("Lnl_Badge");
@@ -91,10 +91,10 @@ namespace PSLNLExportUtility
                 var departments = GetDepartments(departmentService);
                 var locations = GetLocations(locationService);
 
-                foreach (var employee in employees)
+                for (var i = 0; i < employees.Count(); i++)
                 {
+                    var employee = employees[i];
                     var cardholder = employee.ToCardholder();
-                    var department = employee.ToDepartment();
                     var badge = employee.ToBadge();
 
                     ManagementBaseObject existedCardholder = null;
@@ -107,33 +107,48 @@ namespace PSLNLExportUtility
                         locations.TryGetValue(cardholder.Location, out existedLocation);
                     }
 
+                    if (!string.IsNullOrEmpty(cardholder.DepartmentDescription))
+                    {
+                        departments.TryGetValue(cardholder.DepartmentDescription, out existedDepartment);
+                    }
+
                     if (!string.IsNullOrEmpty(cardholder.Id))
                     {
                         cardholders.TryGetValue(cardholder.Id, out existedCardholder);
                     }
 
-                    if (department.Id != default)
+                    if (existedDepartment == null || existedLocation == null)
                     {
-                        departments.TryGetValue(department.Id, out existedDepartment);
-                    }
+                        var departmentAdded = false;
+                        var locationAdded = false;
 
-                    if (existedDepartment == null)
-                    {
-                        cardholder.DepartmentId = default;
-                        _report.Add($"{cardholder.Id}: failed - Department not found");
-                    }
-
-                    if (existedLocation == null)
-                    {
-                        var locationAdded = locationService.AddInstance(new Location { Name = cardholder.Location });
-                        if (locationAdded)
+                        if (existedDepartment == null)
                         {
+                            departmentAdded = departmentService.AddInstance(new Department { Name = cardholder.DepartmentDescription });
+                        }
+                        if (existedLocation == null)
+                        {
+                            locationAdded = locationService.AddInstance(new Location { Name = cardholder.Location });
+                        }
+
+                        if (departmentAdded || locationAdded)
+                        {
+                            cardholderService = CreateLenelService<Cardholder>("Lnl_Cardholder");
+                            badgeService = CreateLenelService<Badge>("Lnl_Badge");
+                            departmentService = CreateLenelService<Department>("Lnl_Department");
+                            locationService = CreateLenelService<Location>("Lnl_Location");
+
+                            cardholders = GetCardholders(cardholderService);
+                            badges = GetBadges(badgeService);
+                            departments = GetDepartments(departmentService);
                             locations = GetLocations(locationService);
-                            existedLocation = locations[cardholder.Location];
+
+                            i--;
+                            continue;
                         }
                         else
                         {
-                            _report.Add($"{cardholder.Id}: failed - Can't add location {cardholder.Location}");
+                            _report.Add($"{cardholder.Id}: failed - Can't add {(departmentAdded ? "department" : "location")} {cardholder.Location}");
                         }
                     }
 
@@ -143,6 +158,15 @@ namespace PSLNLExportUtility
                         if (id.HasValue)
                         {
                             cardholder.SuperLocation = id.Value;
+                        }
+                    }
+
+                    if (existedDepartment != null)
+                    {
+                        var id = existedDepartment["ID"] as int?;
+                        if (id.HasValue)
+                        {
+                            cardholder.DeptId = id.Value;
                         }
                     }
 
@@ -233,16 +257,21 @@ namespace PSLNLExportUtility
             return locations;
         }
 
-        private static Dictionary<int, ManagementBaseObject> GetDepartments(LenelService<Department> departmentService)
+        private static Dictionary<string, ManagementBaseObject> GetDepartments(LenelService<Department> departmentService)
         {
-            var departments = new Dictionary<int, ManagementBaseObject>();
+            var departments = new Dictionary<string, ManagementBaseObject>();
             foreach (var department in departmentService.GetInstances())
             {
-                var key = department["ID"] as int?;
+                var key = department["Name"] as string;
 
-                if (key.HasValue)
+                if (key != null && departments.TryGetValue(key, out var value))
                 {
-                    departments.Add(key.Value, department);
+                    continue;
+                }
+
+                if (key != null)
+                {
+                    departments.Add(key, department);
                 }
             }
 

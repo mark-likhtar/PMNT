@@ -37,6 +37,11 @@ namespace PSLNLReportUtiity
             }            
         }
 
+        private static string DateToOutputDate(string date)
+        {
+            return $"${date.Substring(0, 4)}-${date.Substring(4, 4)}";
+        }
+
         static List<string> GetCardholderRecord(ManagementBaseObject obj)
         {
             var items = new List<string>();
@@ -56,7 +61,7 @@ namespace PSLNLReportUtiity
                     activate = activate.Substring(0, 8);
                     if (activate == today)
                     {
-                        items.Add($"\"{obj["SSNO"]}\",\"GB\",\"{activate}\",\"{obj["USERFIELD85"]}\"");
+                        items.Add($"\"{obj["SSNO"]}\",\"GB\",\"{DateToOutputDate(activate)}\",\"{obj["USERFIELD85"]}\"");
                     }
 
                 }
@@ -77,7 +82,7 @@ namespace PSLNLReportUtiity
                     activate = activate.Substring(0, 8);
                     if (activate == today)
                     {
-                        items.Add($"\"{obj["SSNO"]}\",\"BA\",\"{activate}\",\"{obj["BADGEKEY"]}\"");
+                        items.Add($"\"{obj["SSNO"]}\",\"BA\",\"{DateToOutputDate(activate)}\",\"{obj["ID"]}\"");
                     }
                 }
             }

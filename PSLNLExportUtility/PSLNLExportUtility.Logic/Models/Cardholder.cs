@@ -24,8 +24,13 @@ namespace PSLNLExportUtility.Logic.Models
         [WMIProperty("ADDR1", typeof(string))]
         public string JobCodeDescription { get; set; }
 
-        //[WMIProperty("DEPT", typeof(int))]
+        [WMIProperty("DEPT", typeof(int))]
+        public int DeptId { get; set; }
+
+        [WMIProperty("FLDNUM1047", typeof(int))]
         public int DepartmentId { get; set; }
+
+        public string DepartmentDescription { get; set; }
 
         public string Location { get; set; }
 

@@ -13,6 +13,6 @@ namespace PSLNLExportUtility.Logic.Models
         public int Id { get; set; }
 
         [WMIProperty("Name", typeof(string))]
-        public int Name { get; set; }
+        public string Name { get; set; }
     }
 }

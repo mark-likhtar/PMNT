@@ -21,6 +21,7 @@ namespace PSLNLExportUtility.Logic.Extensions
                 DepartmentId = employee.DepartmentId,
                 Location = employee.Location,
                 CompanyDescription = employee.CompanyDescription,
+                DepartmentDescription = employee.DepartmentDescription,
                 Email = employee.Email,
                 ManagerName = employee.ManagerName,
                 ManagerEmail = employee.ManagerEmail,
@@ -31,22 +32,16 @@ namespace PSLNLExportUtility.Logic.Extensions
 
         public static Badge ToBadge(this Employee employee)
         {
+            string TerminationDate = employee.Status != "A"
+                ? ManagementDateTimeConverter.ToDmtfDateTime(DateTime.Now)
+                : (employee.TerminationDate != default
+                    ? ManagementDateTimeConverter.ToDmtfDateTime(employee.TerminationDate) 
+                    : null);
+
             return new Badge
             {
-                EffectiveDate = ManagementDateTimeConverter.ToDmtfDateTime(employee.EffectiveDate),
                 Status = employee.Status == "A" ? 1 : 5,
-                TerminationDate = ManagementDateTimeConverter.ToDmtfDateTime(
-                    employee.TerminationDate != default 
-                        ? employee.TerminationDate 
-                        : employee.EffectiveDate.AddYears(10)
-                )
-            };
-        }
-        public static Department ToDepartment(this Employee employee)
-        {
-            return new Department
-            {
-                Id = employee.DepartmentId
+                TerminationDate = TerminationDate
             };
         }
     }

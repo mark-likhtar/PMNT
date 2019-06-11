@@ -48,9 +48,8 @@ namespace PSLNLExportUtility.Logic.Services.LenelService
                 if (!CheckPropertyIsDefault(attributeProperty, instanceUpdate))
                 {
                     newInstance[prop.Name] = value;
+                    props.Add($"{prop.Name}: {newInstance[prop.Name]}");
                 }
-
-                props.Add($"{prop.Name}: {newInstance[prop.Name]}");
             }
 
             _logger.Info($"[UPDATE] {string.Join(", ", props)}");
@@ -116,8 +115,8 @@ namespace PSLNLExportUtility.Logic.Services.LenelService
         {
             var value = attributeProperty.Property.GetValue(instance);
 
-            return (attributeProperty.Attribute.Type == typeof(int) && (int)value == default) ||
-                    (attributeProperty.Attribute.Type == typeof(string) && string.IsNullOrEmpty((string)value)) ||
+            return (value == null || (attributeProperty.Attribute.Type == typeof(int) && (int)value == default)) ||
+                    (attributeProperty.Attribute.Type == typeof(string) && string.IsNullOrWhiteSpace((string)value)) ||
                     (attributeProperty.Attribute.Type == typeof(bool) && (bool)value == default) ||
                     (attributeProperty.Attribute.Type == typeof(DateTime) && (DateTime)value == default);
         }
