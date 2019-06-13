@@ -6,7 +6,6 @@ namespace PSLNLExportUtility.Logic.Services.CsvDataReader
 {
     internal static class ConnectionHelper
     {
-        public const string CSV_PROVIDER = "Microsoft.Jet.OLEDB.4.0";
         public const string CSV_EXTENSION = ".csv";
 
         public static string GetConnectionString(string filePath)
@@ -20,7 +19,7 @@ namespace PSLNLExportUtility.Logic.Services.CsvDataReader
                 );
             }
             string directory = new FileInfo(filePath).Directory.FullName;
-            string connectionString = $"Provider=Microsoft.Jet.OLEDB.4.0;Data Source=\"{directory}\";Extended Properties=\"text;HDR=No;FMT=Delimited(|)\"";
+            string connectionString = $"Provider=Microsoft.Jet.OLEDB.4.0;Data Source=\"{directory}\";Extended Properties=\"Text;HDR=No;\"";
             return connectionString;
         }
     }

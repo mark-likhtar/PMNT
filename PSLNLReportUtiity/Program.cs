@@ -39,7 +39,7 @@ namespace PSLNLReportUtiity
 
         private static string DateToOutputDate(string date)
         {
-            return $"${date.Substring(0, 4)}-${date.Substring(4, 4)}";
+            return $"{date.Substring(0, 4)}-{date.Substring(4, 4)}";
         }
 
         static List<string> GetCardholderRecord(ManagementBaseObject obj)

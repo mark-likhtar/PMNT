@@ -21,7 +21,10 @@
         }
 
         private string ReadDataByFlag =>
-            _withKronosNumber ? @"LTRIM(RTRIM([F16])) AS BadgeNumber, LTRIM(RTRIM([F17])) AS PerOrg" : @"LTRIM(RTRIM([F16])) AS PerOrg";
+            _withKronosNumber 
+                ? @"LTRIM(RTRIM([F16])) AS BadgeNumber, 
+                    LTRIM(RTRIM([F17])) AS PerOrg" 
+                : @"LTRIM(RTRIM([F16])) AS PerOrg";
 
         public string ReadData =>
             $@"
@@ -44,5 +47,5 @@
                   {ReadDataByFlag}
                 FROM [{_targetSheetName}]
             ";
-    }
+    }    
 }
