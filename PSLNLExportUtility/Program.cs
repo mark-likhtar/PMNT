@@ -181,13 +181,26 @@ namespace PSLNLExportUtility
                     }
 
                     var personBadges = CardholderService.GetCardholderBadgesBySSNO(cardholder.Id).ToList();
+                    var existedPersonBadges = new Dictionary<int, ManagementBaseObject>();
+
                     foreach (var personBadge in personBadges)
                     {
                         if (badges.TryGetValue(personBadge.BadgeId, out existedBadge))
                         {
-                            badge.ExtendedId = $"0x{personBadge.BadgeId}";
-                            isSuccess = badgeService.UpdateInstance(existedBadge, badge);
+                            existedPersonBadges.Add(personBadge.BadgeId, existedBadge);
                         }
+                    }
+
+                    if (existedPersonBadges.Where((x) =>
+                    {
+                        var status = x.Value["STATUS"] as int?;
+                        return status.HasValue && status.Value == 1;
+                    }).Count() == 0)
+                    {
+                        var item = existedPersonBadges.First();
+
+                        badge.ExtendedId = $"0x{item.Key}";
+                        isSuccess = badgeService.UpdateInstance(item.Value, badge);
                     }
 
                     if (isSuccess)
@@ -226,12 +239,12 @@ namespace PSLNLExportUtility
             return cardholders;
         }
 
-        private static Dictionary<long, ManagementBaseObject> GetBadges(LenelService<Badge> badgeService)
+        private static Dictionary<int, ManagementBaseObject> GetBadges(LenelService<Badge> badgeService)
         {
-            var badges = new Dictionary<long, ManagementBaseObject>();
+            var badges = new Dictionary<int, ManagementBaseObject>();
             foreach (var badge in badgeService.GetInstances())
             {
-                var key = badge["ID"] as long?;
+                var key = badge["BADGEKEY"] as int?;
 
                 if (key.HasValue)
                 {
