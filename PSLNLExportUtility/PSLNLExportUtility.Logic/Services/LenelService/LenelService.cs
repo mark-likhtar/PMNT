@@ -85,9 +85,8 @@ namespace PSLNLExportUtility.Logic.Services.LenelService
                 if (!CheckPropertyIsDefault(attributeProperty, instance))
                 {
                     newInstance[prop.Name] = value;
+                    props.Add($"{prop.Name}: {newInstance[prop.Name]}");
                 }
-
-                props.Add($"{prop.Name}: {newInstance[prop.Name]}");
             }
 
             _logger.Info($"[INSERT] {string.Join(", ", props)}");

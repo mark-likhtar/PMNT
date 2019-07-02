@@ -191,16 +191,32 @@ namespace PSLNLExportUtility
                         }
                     }
 
-                    if (existedPersonBadges.Where((x) =>
+                    if (cardholder.Status == 1 && existedPersonBadges.Count > 0 && existedPersonBadges.Where((x) =>
                     {
                         var status = x.Value["STATUS"] as int?;
                         return status.HasValue && status.Value == 1;
                     }).Count() == 0)
                     {
                         var item = existedPersonBadges.First();
+                        var id = item.Value["ID"] as long?;
+                        if (id.HasValue)
+                        {
+                            badge.ExtendedId = $"0x{id.Value}";
+                            isSuccess = badgeService.UpdateInstance(item.Value, badge);
+                        }
+                    }
 
-                        badge.ExtendedId = $"0x{item.Key}";
-                        isSuccess = badgeService.UpdateInstance(item.Value, badge);
+                    if (cardholder.Status == 5)
+                    {
+                        foreach (var item in existedPersonBadges)
+                        {
+                            var id = item.Value["ID"] as long?;
+                            if (id.HasValue)
+                            {
+                                badge.ExtendedId = $"0x{id.Value}";
+                                isSuccess = badgeService.UpdateInstance(item.Value, badge);
+                            }
+                        }
                     }
 
                     if (isSuccess)

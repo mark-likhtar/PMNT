@@ -54,5 +54,7 @@ namespace PSLNLExportUtility.Logic.Models
 
         [WMIProperty("PERORGTEXT", typeof(string))]
         public string PerOrg { get; set; }
+
+        public int Status { get; set; }
     }
 }

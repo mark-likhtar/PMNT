@@ -26,7 +26,8 @@ namespace PSLNLExportUtility.Logic.Extensions
                 ManagerName = employee.ManagerName,
                 ManagerEmail = employee.ManagerEmail,
                 BadgeNumber = $"{employee.BadgeNumber}",
-                PerOrg = employee.PerOrg
+                PerOrg = employee.PerOrg,
+                Status = employee.Status == "A" ? 1 : 5,
             };
         }
 
