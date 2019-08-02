@@ -24,7 +24,7 @@ namespace PSLNLExportUtility.Logic.Models
         public string ManagerEmail { get; set; }
         public string SupperLocation { get; set; }
         public DateTime TerminationDate { get; set; }
-        public long BadgeNumber { get; set; }
+        public string BadgeNumber { get; set; }
         public string PerOrg { get; set; }
     }
 }
