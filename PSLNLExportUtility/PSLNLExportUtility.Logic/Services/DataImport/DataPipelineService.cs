@@ -68,7 +68,7 @@ namespace PSLNLExportUtility.Logic.Services.DataImport
 
             ValidateSourceFilePrescence();
 
-            MoveCurrentFileToDirectory(_settings.ProcessedDirectoryPath);
+            MoveCurrentFileToDirectory(_settings.ProcessedDirectoryPath, true);
         }
 
         private void WriteLogsToFile(string logs, string directoryPath, string fileName)
@@ -107,11 +107,22 @@ namespace PSLNLExportUtility.Logic.Services.DataImport
             return directoryPath;
         }
 
-        private void MoveCurrentFileToDirectory(string destinationDirectoryPath)
+        private void MoveCurrentFileToDirectory(string destinationDirectoryPath, bool withDateStamp = false)
         {
+            var fileName = "";
+
+            if (withDateStamp)
+            {
+                fileName = $"{Path.GetFileNameWithoutExtension(CurrentFileLocation)}_{DateTime.Now.TimeOfDay}{Path.GetExtension(CurrentFileLocation)}".Replace(":", "");
+            }
+            else
+            {
+                fileName = Path.GetFileName(CurrentFileLocation);
+            }
+
             string newFilePath = Path.Combine(
                 destinationDirectoryPath,
-                Path.GetFileName(CurrentFileLocation)
+                fileName
             );
 
             File.Move(CurrentFileLocation, newFilePath);
